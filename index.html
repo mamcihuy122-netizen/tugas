@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="id" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TUGAS SAMID | Modern Workspace</title>
+    <meta name="description" content="Personal Task Manager - Premium Edition">
+    
+    <!-- Google Fonts: Plus Jakarta Sans for a very modern, geometric look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Abstract Background Decor -->
+    <div class="bg-decor bg-decor-1"></div>
+    <div class="bg-decor bg-decor-2"></div>
+    <div class="bg-decor bg-decor-3"></div>
+
+    <div class="app-container">
+        <!-- Mobile Overlay -->
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+        <!-- Sidebar / Glassmorphism -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i data-lucide="zap"></i>
+                    </div>
+                    <div class="logo-text-wrapper">
+                        <span class="logo-text">TUGAS SAMID</span>
+                        <span class="logo-badge">PRO</span>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <p class="nav-label">MENU UTAMA</p>
+                <a href="#" class="nav-item active" data-view="dashboard">
+                    <div class="nav-item-bg"></div>
+                    <i data-lucide="layout-grid"></i> 
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-view="all-tasks">
+                    <div class="nav-item-bg"></div>
+                    <i data-lucide="layers"></i> 
+                    <span class="nav-text">Semua Tugas</span>
+                    <span class="nav-count" id="nav-count-all">0</span>
+                </a>
+                
+                <p class="nav-label mt-4">STATUS TUGAS</p>
+                <a href="#" class="nav-item" data-view="todo-tasks">
+                    <div class="nav-item-bg"></div>
+                    <div class="status-dot dot-todo"></div>
+                    <span class="nav-text">Belum Mulai</span>
+                </a>
+                <a href="#" class="nav-item" data-view="progress-tasks">
+                    <div class="nav-item-bg"></div>
+                    <div class="status-dot dot-progress"></div>
+                    <span class="nav-text">Sedang Dikerjakan</span>
+                </a>
+                <a href="#" class="nav-item" data-view="done-tasks">
+                    <div class="nav-item-bg"></div>
+                    <div class="status-dot dot-done"></div>
+                    <span class="nav-text">Selesai</span>
+                </a>
+                
+                <div class="spacer"></div>
+                
+                <a href="#" class="nav-item" data-view="settings">
+                    <div class="nav-item-bg"></div>
+                    <i data-lucide="settings-2"></i> 
+                    <span class="nav-text">Pengaturan</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-profile glass-card">
+                    <div class="avatar">
+                        <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Samid&backgroundColor=transparent" alt="User">
+                    </div>
+                    <div class="user-info">
+                        <span class="user-name" id="display-user-name">Mahasiswa</span>
+                        <span class="user-label">Workspace Pribadi</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Navigation -->
+            <header class="top-header glass-header">
+                <div class="header-left">
+                    <button id="mobile-menu-btn" class="btn-icon mobile-only"><i data-lucide="menu"></i></button>
+                    <div class="breadcrumb">
+                        <span class="text-muted hidden-mobile">Tugas Samid</span>
+                        <span class="text-muted hidden-mobile mx-2">/</span>
+                        <h2 id="page-title" class="page-title">Dashboard</h2>
+                    </div>
+                </div>
+                
+                <div class="header-right">
+                    <div class="search-bar hidden-mobile group">
+                        <i data-lucide="search" class="search-icon"></i>
+                        <input type="text" id="global-search" placeholder="Tekan '/' untuk mencari...">
+                        <div class="search-shortcut">/</div>
+                    </div>
+                    
+                    <div class="divider-v hidden-mobile"></div>
+                    
+                    <button id="theme-toggle" class="btn-icon">
+                        <i data-lucide="moon" id="theme-icon"></i>
+                    </button>
+                    <button id="btn-add-task-header" class="btn-glow">
+                        <i data-lucide="plus"></i> <span class="hidden-mobile">Tugas Baru</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Search Bar Mobile -->
+            <div class="mobile-search-bar mobile-only">
+                <div class="search-bar">
+                    <i data-lucide="search"></i>
+                    <input type="text" id="global-search-mobile" placeholder="Cari tugas...">
+                </div>
+            </div>
+
+            <!-- Scrollable View Container -->
+            <div id="view-container" class="view-container custom-scrollbar">
+                
+                <!-- ================= DASHBOARD VIEW ================= -->
+                <section id="view-dashboard" class="view active">
+                    <div class="content-wrapper">
+                        <!-- Header Section with Date & Greeting -->
+                        <div class="dashboard-header animate-on-load staggered-1">
+                            <div>
+                                <p id="current-date" class="date-chip"><i data-lucide="calendar"></i> <span></span></p>
+                                <h1 class="greeting-title">Halo, <span class="text-gradient" id="greeting-name">Mahasiswa</span> 👋</h1>
+                                <p class="greeting-subtitle">Siap untuk menyelesaikan tugas-tugasmu hari ini?</p>
+                            </div>
+                        </div>
+
+                        <!-- Modern Stat Cards -->
+                        <div class="stats-grid">
+                            <div class="stat-card glass-card animate-on-load staggered-2" data-type="total">
+                                <div class="stat-header">
+                                    <span class="stat-label">Total Tugas</span>
+                                    <div class="stat-icon-wrapper bg-soft-blue"><i data-lucide="folder"></i></div>
+                                </div>
+                                <div class="stat-value" id="stat-total">0</div>
+                            </div>
+                            
+                            <div class="stat-card glass-card animate-on-load staggered-3" data-type="todo">
+                                <div class="stat-header">
+                                    <span class="stat-label">Belum Mulai</span>
+                                    <div class="stat-icon-wrapper bg-soft-slate"><i data-lucide="circle-dashed"></i></div>
+                                </div>
+                                <div class="stat-value" id="stat-todo">0</div>
+                            </div>
+                            
+                            <div class="stat-card glass-card animate-on-load staggered-4" data-type="progress">
+                                <div class="stat-header">
+                                    <span class="stat-label">Dikerjakan</span>
+                                    <div class="stat-icon-wrapper bg-soft-orange"><i data-lucide="loader"></i></div>
+                                </div>
+                                <div class="stat-value" id="stat-progress">0</div>
+                            </div>
+                            
+                            <div class="stat-card glass-card animate-on-load staggered-5" data-type="done">
+                                <div class="stat-header">
+                                    <span class="stat-label">Selesai</span>
+                                    <div class="stat-icon-wrapper bg-soft-green"><i data-lucide="check-circle-2"></i></div>
+                                </div>
+                                <div class="stat-value text-green" id="stat-done">0</div>
+                            </div>
+                        </div>
+
+                        <div class="dashboard-grid animate-on-load staggered-6">
+                            <!-- Progress Overview -->
+                            <div class="dashboard-card glass-card progress-section">
+                                <div class="card-header-modern">
+                                    <div class="icon-title">
+                                        <div class="icon-box"><i data-lucide="activity"></i></div>
+                                        <h3>Tingkat Penyelesaian</h3>
+                                    </div>
+                                    <div class="percentage-badge" id="progress-percentage-badge">0%</div>
+                                </div>
+                                <div class="card-body">
+                                    <p class="progress-text-modern"><span id="progress-count">0</span> dari <span id="progress-total">0</span> tugas telah diselesaikan.</p>
+                                    <div class="progress-track">
+                                        <div class="progress-fill" id="progress-bar-fill">
+                                            <div class="progress-glow"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Deadlines -->
+                            <div class="dashboard-card glass-card deadlines-section">
+                                <div class="card-header-modern">
+                                    <div class="icon-title">
+                                        <div class="icon-box text-orange"><i data-lucide="timer"></i></div>
+                                        <h3>Deadline Terdekat</h3>
+                                    </div>
+                                </div>
+                                <div class="card-body list-container" id="dashboard-deadlines-list">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================= ALL TASKS VIEW ================= -->
+                <section id="view-all-tasks" class="view">
+                    <div class="content-wrapper">
+                        <div class="view-header-modern animate-on-load">
+                            <div class="title-area">
+                                <h2>Semua Tugas</h2>
+                                <p class="text-muted">Kelola seluruh tugas kuliahmu di sini.</p>
+                            </div>
+                            
+                            <div class="modern-filters">
+                                <div class="filter-group">
+                                    <i data-lucide="filter"></i>
+                                    <select id="filter-status-all" class="modern-select">
+                                        <option value="all">Semua Status</option>
+                                        <option value="Belum Dikerjakan">Belum Mulai</option>
+                                        <option value="Sedang Dikerjakan">Sedang Dikerjakan</option>
+                                        <option value="Selesai">Selesai</option>
+                                    </select>
+                                </div>
+                                <div class="filter-group">
+                                    <i data-lucide="flag"></i>
+                                    <select id="filter-priority-all" class="modern-select">
+                                        <option value="all">Semua Prioritas</option>
+                                        <option value="Tinggi">Tinggi</option>
+                                        <option value="Sedang">Sedang</option>
+                                        <option value="Rendah">Rendah</option>
+                                    </select>
+                                </div>
+                                <div class="filter-group">
+                                    <i data-lucide="arrow-up-down"></i>
+                                    <select id="sort-all" class="modern-select">
+                                        <option value="deadline-asc">Deadline Terdekat</option>
+                                        <option value="deadline-desc">Deadline Terjauh</option>
+                                        <option value="priority-desc">Prioritas Tertinggi</option>
+                                        <option value="newest">Baru Ditambahkan</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="task-masonry" id="container-all-tasks"></div>
+                    </div>
+                </section>
+
+                <!-- ================= TO DO TASKS VIEW ================= -->
+                <section id="view-todo-tasks" class="view">
+                    <div class="content-wrapper">
+                        <div class="view-header-modern animate-on-load">
+                            <div class="title-area">
+                                <h2>Belum Mulai</h2>
+                                <p class="text-muted">Tugas yang menunggu untuk dikerjakan.</p>
+                            </div>
+                            <div class="modern-filters">
+                                <select id="sort-todo" class="modern-select">
+                                    <option value="deadline-asc">Deadline Terdekat</option>
+                                    <option value="priority-desc">Prioritas Tertinggi</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="task-masonry" id="container-todo-tasks"></div>
+                    </div>
+                </section>
+
+                <!-- ================= IN PROGRESS TASKS VIEW ================= -->
+                <section id="view-progress-tasks" class="view">
+                    <div class="content-wrapper">
+                         <div class="view-header-modern animate-on-load">
+                            <div class="title-area">
+                                <h2>Sedang Dikerjakan <span class="live-indicator"></span></h2>
+                                <p class="text-muted">Fokus selesaikan tugas-tugas ini.</p>
+                            </div>
+                            <div class="modern-filters">
+                                <select id="sort-progress" class="modern-select">
+                                    <option value="deadline-asc">Deadline Terdekat</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="task-masonry" id="container-progress-tasks"></div>
+                    </div>
+                </section>
+
+                <!-- ================= DONE TASKS VIEW ================= -->
+                <section id="view-done-tasks" class="view">
+                    <div class="content-wrapper">
+                        <div class="view-header-modern animate-on-load">
+                            <div class="title-area">
+                                <h2>Sudah Selesai 🎉</h2>
+                                <p class="text-muted">Kerja bagus! Ini pencapaianmu.</p>
+                            </div>
+                        </div>
+                        <div class="task-masonry" id="container-done-tasks"></div>
+                    </div>
+                </section>
+
+                <!-- ================= SETTINGS VIEW ================= -->
+                <section id="view-settings" class="view">
+                    <div class="content-wrapper">
+                        <div class="view-header-modern animate-on-load">
+                            <div class="title-area">
+                                <h2>Pengaturan</h2>
+                                <p class="text-muted">Sesuaikan pengalaman kerjamu.</p>
+                            </div>
+                        </div>
+
+                        <div class="settings-grid">
+                            <!-- Profile Settings -->
+                            <div class="settings-card glass-card animate-on-load staggered-1">
+                                <div class="settings-header">
+                                    <div class="icon-box"><i data-lucide="user"></i></div>
+                                    <h3>Profil</h3>
+                                </div>
+                                <div class="settings-body">
+                                    <div class="modern-input-group">
+                                        <label for="input-username">Nama Tampilan</label>
+                                        <div class="input-with-btn">
+                                            <i data-lucide="edit-2"></i>
+                                            <input type="text" id="input-username" placeholder="Nama Anda...">
+                                            <button id="btn-save-username" class="btn-sm btn-primary">Simpan</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Appearance Settings -->
+                            <div class="settings-card glass-card animate-on-load staggered-2">
+                                <div class="settings-header">
+                                    <div class="icon-box"><i data-lucide="palette"></i></div>
+                                    <h3>Tampilan</h3>
+                                </div>
+                                <div class="settings-body">
+                                    <label class="mb-3 block text-sm font-medium">Tema Visual</label>
+                                    <div class="theme-switcher">
+                                        <button class="theme-btn" data-theme="light">
+                                            <i data-lucide="sun"></i>
+                                            <span>Light</span>
+                                        </button>
+                                        <button class="theme-btn" data-theme="dark">
+                                            <i data-lucide="moon"></i>
+                                            <span>Dark</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Data Management -->
+                            <div class="settings-card glass-card animate-on-load staggered-3">
+                                <div class="settings-header">
+                                    <div class="icon-box"><i data-lucide="database"></i></div>
+                                    <h3>Penyimpanan Lokal</h3>
+                                </div>
+                                <div class="settings-body">
+                                    <p class="text-sm text-muted mb-4">Data disimpan dengan aman di browser Anda. Lakukan backup secara berkala.</p>
+                                    <div class="action-buttons-col">
+                                        <button id="btn-export-data" class="btn-outline w-full">
+                                            <i data-lucide="download"></i> Backup Data (JSON)
+                                        </button>
+                                        <input type="file" id="file-import-data" accept=".json" style="display: none;">
+                                        <button id="btn-import-data" class="btn-outline w-full">
+                                            <i data-lucide="upload"></i> Pulihkan Data
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Danger Zone -->
+                            <div class="settings-card glass-card danger-card animate-on-load staggered-4">
+                                <div class="settings-header">
+                                    <div class="icon-box text-red"><i data-lucide="alert-triangle"></i></div>
+                                    <h3 class="text-red">Zona Berbahaya</h3>
+                                </div>
+                                <div class="settings-body">
+                                    <p class="text-sm text-red-muted mb-4">Tindakan ini tidak dapat dibatalkan. Semua tugas akan hilang selamanya.</p>
+                                    <button id="btn-delete-all" class="btn-danger-solid w-full">
+                                        <i data-lucide="trash-2"></i> Hapus Seluruh Data
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- ================= MODALS ================= -->
+    
+    <!-- Modern Task Modal -->
+    <div class="modal-backdrop" id="task-modal-overlay">
+        <div class="modern-modal" id="task-modal">
+            <div class="modal-banner"></div>
+            <div class="modal-content-area">
+                <div class="modal-header-modern">
+                    <div class="modal-title-area">
+                        <div class="modal-icon-bg"><i data-lucide="edit-3"></i></div>
+                        <h3 id="modal-title">Tugas Baru</h3>
+                    </div>
+                    <button class="btn-circle btn-close-modal"><i data-lucide="x"></i></button>
+                </div>
+                
+                <div class="modal-body-modern custom-scrollbar">
+                    <form id="task-form">
+                        <input type="hidden" id="task-id">
+                        
+                        <!-- Title (Large Input) -->
+                        <div class="form-group mb-6">
+                            <input type="text" id="task-title" class="input-title-large" required placeholder="Apa yang ingin dikerjakan?">
+                            <span class="error-msg" id="error-title">Judul tugas tidak boleh kosong</span>
+                        </div>
+                        
+                        <div class="form-grid">
+                            <!-- Subject -->
+                            <div class="form-group">
+                                <label><i data-lucide="book"></i> Mata Kuliah</label>
+                                <input type="text" id="task-subject" class="modern-input" placeholder="Misal: Sistem Operasi">
+                            </div>
+                            
+                            <!-- Deadline -->
+                            <div class="form-group">
+                                <label><i data-lucide="calendar"></i> Tenggat Waktu</label>
+                                <input type="date" id="task-deadline" class="modern-input">
+                            </div>
+
+                            <!-- Priority -->
+                            <div class="form-group">
+                                <label><i data-lucide="flag"></i> Prioritas</label>
+                                <div class="custom-select-wrapper">
+                                    <select id="task-priority" class="modern-input">
+                                        <option value="Rendah">🟢 Rendah</option>
+                                        <option value="Sedang" selected>🟡 Sedang</option>
+                                        <option value="Tinggi">🔴 Tinggi</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Status -->
+                            <div class="form-group">
+                                <label><i data-lucide="circle-dashed"></i> Status</label>
+                                <div class="custom-select-wrapper">
+                                    <select id="task-status" class="modern-input">
+                                        <option value="Belum Dikerjakan">Belum Mulai</option>
+                                        <option value="Sedang Dikerjakan">Sedang Dikerjakan</option>
+                                        <option value="Selesai">Selesai</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="form-group mt-4">
+                            <label><i data-lucide="align-left"></i> Catatan Tambahan (Opsional)</label>
+                            <textarea id="task-desc" class="modern-input textarea-modern" placeholder="Tulis detail tugas, link referensi, atau instruksi dosen di sini..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="modal-footer-modern">
+                    <button class="btn-ghost btn-close-modal">Batal</button>
+                    <button type="button" id="btn-save-task" class="btn-glow-primary">
+                        <span>Simpan Tugas</span> <i data-lucide="arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Modal -->
+    <div class="modal-backdrop" id="confirm-modal-overlay">
+        <div class="modern-modal modal-sm" id="confirm-modal">
+            <div class="modal-content-area text-center py-6">
+                <div class="warning-ring mb-4 mx-auto">
+                    <i data-lucide="alert-triangle"></i>
+                </div>
+                <h3 id="confirm-title" class="text-xl font-bold mb-2">Konfirmasi</h3>
+                <p id="confirm-desc" class="text-muted mb-6">Tindakan ini tidak dapat dikembalikan.</p>
+                <div class="flex-row-center gap-3">
+                    <button class="btn-ghost w-full" id="btn-cancel-confirm">Batal</button>
+                    <button class="btn-danger-solid w-full" id="btn-action-confirm">Ya, Lanjutkan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST CONTAINER -->
+    <div id="toast-container" class="toast-wrapper"></div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
